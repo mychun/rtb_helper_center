@@ -6,5 +6,5 @@ export function toScrollTop() {
     if (top <= 0) {
       clearInterval(timeTop)
     }
-  }, 1)
+  }, 10)
 }
