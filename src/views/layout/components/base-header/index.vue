@@ -33,33 +33,19 @@
         </div>
         <button class="help-top-search-btn">搜索</button>
       </div>
-      <ul class="tabs" data-spm="tab">
-        <li class="tab-link practice">
-          <a href="" target="_blank"
-            ><i class="tab-icon"></i>
-            <p>速递管家</p>
-          </a>
-        </li>
-        <li class="tab-link practice">
-          <a href="" target="_blank"
-            ><i class="tab-icon"></i>
-            <p>仓储</p>
-          </a>
-        </li>
-        <li class="tab-link practice">
-          <a href="" target="_blank"
-            ><i class="tab-icon"></i>
-            <p>转运</p>
-          </a>
-        </li>
-      </ul>
+      <product-list></product-list>
     </div>
   </div>
 </template>
 <script>
+import ProductList from '../product-list'
+
 const logoUrl = require('@/assets/img/logo.png')
 export default {
   name: 'baseHeader',
+  components: {
+    ProductList
+  },
   data() {
     return {
       logoUrl

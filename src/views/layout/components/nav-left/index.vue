@@ -1,35 +1,55 @@
 <template>
   <div class="help-index-menu">
     <ul class="help-index-menu-list">
-      <li v-for="nav in navList" :key="nav.id">
+      <li v-for="nav in navChildList" :key="nav.categoryId">
         <template v-if="nav.children.length > 0">
           <a class="one-class more" href="javascript:void(0);">{{
-            nav.name
+            nav.categoryName
           }}</a>
 
           <ul class="menu-son-list">
-            <li v-for="child1 in nav.children" :key="child1.id">
+            <li v-for="child1 in nav.children" :key="child1.categoryId">
               <template v-if="child1.children.length > 0">
-                <a class="more" href="javascript:void(0);">{{ child1.name }}</a>
+                <a class="more" href="javascript:void(0);">{{
+                  child1.categoryName
+                }}</a>
                 <ul class="menu-son-list">
-                  <li v-for="child2 in child1.children" :key="child2.id">
+                  <li
+                    v-for="child2 in child1.children"
+                    :key="child2.categoryId"
+                  >
                     <template v-if="child2.children.length > 0">
                       <a class="more" href="javascript:void(0);">{{
-                        child2.name
+                        child2.categoryName
                       }}</a>
                       <ul class="menu-son-list">
-                        <li v-for="child3 in child2.children" :key="child3.id">
+                        <li
+                          v-for="child3 in child2.children"
+                          :key="child3.categoryId"
+                        >
                           <router-link
-                            :to="{ name: 'list', params: { id: child3.id } }"
-                            >{{ child3.name }}</router-link
+                            :to="{
+                              name: 'list',
+                              params: {
+                                productCode,
+                                categoryId: child3.categoryId,
+                              },
+                            }"
+                            >{{ child3.categoryName }}</router-link
                           >
                         </li>
                       </ul>
                     </template>
                     <template v-else>
                       <router-link
-                        :to="{ name: 'list', params: { id: child2.id } }"
-                        >{{ child2.name }}</router-link
+                        :to="{
+                          name: 'list',
+                          params: {
+                            productCode,
+                            categoryId: child2.categoryId,
+                          },
+                        }"
+                        >{{ child2.categoryName }}</router-link
                       >
                     </template>
                   </li>
@@ -37,8 +57,11 @@
               </template>
               <template v-else>
                 <router-link
-                  :to="{ name: 'list', params: { id: child1.id } }"
-                  >{{ child1.name }}</router-link
+                  :to="{
+                    name: 'list',
+                    params: { productCode, categoryId: child1.categoryId },
+                  }"
+                  >{{ child1.categoryName }}</router-link
                 >
               </template>
             </li>
@@ -47,8 +70,11 @@
         <template v-else>
           <router-link
             class="one-class"
-            :to="{ name: 'list', params: { id: nav.id } }"
-            >{{ nav.name }}</router-link
+            :to="{
+              name: 'list',
+              params: { productCode, categoryId: nav.categoryId },
+            }"
+            >{{ nav.categoryName }}</router-link
           >
         </template>
       </li>
@@ -74,13 +100,17 @@
 
 <script>
 import $ from 'jquery'
+import { mapGetters } from 'vuex'
+import store from '../../../../store'
 
 export default {
   name: 'navLeft',
-  data() {
-    return {
-      navList: [],
-      id: undefined
+  computed: {
+    ...mapGetters(['productCode', 'navChildList', 'navList'])
+  },
+  watch: {
+    productCode(newVal) {
+      this.setNavChildListToProductCode(newVal)
     }
   },
   mounted() {
@@ -88,12 +118,17 @@ export default {
       $(this).toggleClass('show-son-nav').siblings('ul').slideToggle()
     })
   },
-  created() {
-    this.$http.get('/getNav').then(res => {
-      this.navList = res.data.data.nav
-    })
-  },
   methods: {
+    setNavChildListToProductCode(productCode) {
+      const navList = this.navList
+      const len = navList.length
+      for (let i = 0; i < len; i++) {
+        const item = navList[i]
+        if (item.productCode === productCode) {
+          store.dispatch('setNavChildList', item.productCategories)
+        }
+      }
+    }
   }
 }
 </script>

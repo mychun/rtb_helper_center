@@ -1,9 +1,12 @@
 <template>
     <ul class="search-container">
-      <li v-for="(item, index) in data" :key="index">
-        <router-link class="help-item-title" :to="{ name: 'detail', params: { id: item.id } }">{{ item.title }}</router-link>
-        <div class="help-item-content">{{ item.intro }}</div>
-        <div class="nodes-info">创建时间：{{ item.create_date }}</div>
+      <li v-for="item in data" :key="item.documentId">
+        <router-link class="help-item-title" :to="{ name: 'detail', params: { documentId: item.documentId } }">{{ item.documentTitle }}</router-link>
+        <!-- <div class="help-item-content">{{ item.intro }}</div> -->
+        <div class="nodes-info">
+          <span>创建时间：{{ item.createTime }}</span>
+          <span v-if="item.updateUserName">创建人：{{ item.updateUserName }}</span>
+        </div>
       </li>
 
       <!-- <li>
@@ -68,7 +71,9 @@ export default {
       color: #999;
       line-height: 18px;
       margin-right: 60px;
-      display: inline-block;
+      span{
+        display: inline-block; margin-right: 10px;
+      }
     }
   }
 }

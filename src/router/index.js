@@ -11,12 +11,12 @@ const routes = [
     redirect: {
       path: 'list/:id',
       params: {
-        id: 1
+        id: '01'
       }
     },
     children: [
       {
-        path: 'list/:id',
+        path: 'list/:productCode/:categoryId?',
         name: 'list',
         component: () => import('../views/list')
       },
@@ -26,7 +26,7 @@ const routes = [
         component: () => import('../views/search')
       },
       {
-        path: 'detail/:id',
+        path: 'detail/:documentId',
         name: 'detail',
         component: () => import('../views/detail')
       }
@@ -36,11 +36,11 @@ const routes = [
     path: '/404',
     name: 'notFound',
     component: () => import('../views/errorPage/404.vue')
+  },
+  {
+    path: '*',
+    redirect: '/404'
   }
-  // {
-  //   path: '*',
-  //   redirect: '/404'
-  // }
 ]
 
 const router = new VueRouter({

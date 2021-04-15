@@ -2,14 +2,19 @@
   <div class="help-index-list">
     <div class="help-index-cell">
       <div class="help-index-cell-content" v-if="!loading">
-        <item-list :data="list"></item-list>
-        <pagination
-          :page-index="searchForm.page"
-          :total="count"
-          :page-size="searchForm.size"
-          @change="pageChange"
-        >
-        </pagination>
+        <template v-if="list.length > 0">
+          <item-list :data="list"></item-list>
+          <pagination
+            :page-index="searchForm.currentPage"
+            :total="count"
+            :page-size="searchForm.pageSize"
+            @change="pageChange"
+          >
+          </pagination>
+        </template>
+        <template v-else>
+          <empty></empty>
+        </template>
       </div>
       <loader v-else></loader>
     </div>
@@ -20,55 +25,95 @@
 import ItemList from '../../components/item-list'
 import Pagination from '../../components/pagination'
 import Loader from '../../components/loader'
-import { toScrollTop } from '../../utils/dom'
-
+import Empty from '../../components/empty'
+// import { toScrollTop } from '../../utils/dom'
+import store from '../../store'
+import { mapGetters } from 'vuex'
+import { getList } from '../../api/app'
 export default {
   name: 'list',
   components: {
     ItemList,
     Pagination,
-    Loader
+    Loader,
+    Empty
   },
   data() {
     return {
-      id: undefined,
       searchForm: {
-        size: 20, // 每页显示20条数据
-        page: 1 // 当前页码
+        pageSize: 20, // 每页显示20条数据
+        currentPage: 1, // 当前页码
+        productCode: '',
+        categoryId: '',
+        documentTitle: ''
       },
       count: 0, // 总记录数
       list: [],
       loading: true
     }
   },
-  beforeRouteUpdate(to, from, next) {
-    this.id = from.params.id
-    this.getList()
-    next()
+  // beforeRouteUpdate(to, from, next) {
+  //   console.log('beforeRouteUpdate', to.params.productCode)
+  //   store.dispatch('setProductCode', to.params.productCode)
+  //   next()
+  // },
+  // activated() {
+  //   console.log('activated', this.$route.params.productCode)
+  //   store.dispatch('setProductCode', this.$route.params.productCode)
+  // },
+  computed: {
+    ...mapGetters(['productCode'])
+  },
+  watch: {
+    // productCode(newVal) {
+    //   this.init()
+    // },
+    $route: {
+      handler(route) {
+        if (route.name === 'list') {
+          if (this.productCode !== route.params.productCode) {
+            store.dispatch('setProductCode', route.params.productCode)
+          }
+          this.init()
+        }
+      }
+    }
   },
   created() {
-    this.id = this.$route.params.id
-    this.getList()
+    this.init()
   },
   methods: {
-    getList() {
-      console.log(this.id)
+    init() {
+      const productCode = this.$route.params.productCode
+      const categoryId = this.$route.params.categoryId
+
+      if (!this.productCode) {
+        store.dispatch('setProductCode', productCode)
+      }
+      this.searchForm.productCode = this.productCode
+
+      if (categoryId) {
+        this.searchForm.categoryId = categoryId
+      } else {
+        this.searchForm.categoryId = ''
+      }
+      this.getListData()
+    },
+    getListData() {
       this.loading = true
-      this.$http.post('/api/pageList', this.searchForm).then(res => {
-        this.list = res.data.data.list
-        this.count = res.data.data.total
+      getList(this.searchForm).then(res => {
+        this.list = res.data.data
+        this.count = res.data.paginationInfo.totalCount
+
         this.loading = false
-        this.$nextTick(() => {
-          toScrollTop()
-        })
       }).catch(err => {
-        console.log(err)
+        console.log('err' + err)
       })
     },
     // 从page组件传递过来的当前page
     pageChange(page) {
-      this.searchForm.page = page
-      this.getList()
+      this.searchForm.currentPage = page
+      this.getListData()
     }
   }
 }

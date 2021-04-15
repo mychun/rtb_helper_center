@@ -1,18 +1,56 @@
 <template>
   <div class="help-index-list">
-    <div class="help-body-box-detail-title">
-      <h1>无法修改票件货物类型，怎么办？</h1>
-      <p class="helper-update">更新时间：2020-09-18 18:07</p>
-    </div>
-    <div class="help-detail-container">
-      2）点击新增后出现下图，将红框中的小望远镜点击一下，添加需要走的渠道最后点击保存即可
-    </div>
+    <template v-if="!laoding">
+      <div class="help-body-box-detail-title">
+        <h1>{{ detail.documentTitle }}</h1>
+        <p class="helper-update">
+          <span>创建时间：{{ detail.createTime }}</span
+          ><span>创建人：{{ detail.createUserName }}</span>
+        </p>
+      </div>
+      <div
+        class="help-detail-container"
+        v-html="detail.productDocumentContent.documentContent"
+      ></div>
+    </template>
+    <template v-else>
+      <loader></loader>
+    </template>
   </div>
 </template>
 
 <script>
+import { getDetail } from '../../api/app'
+import Loader from '../../components/loader'
+
 export default {
-  name: ''
+  name: 'detail',
+  components: {
+    Loader
+  },
+  data() {
+    return {
+      detail: '',
+      laoding: true
+    }
+  },
+  created() {
+    this.init()
+  },
+  activated() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.laoding = true
+      getDetail(this.$route.params.documentId).then(res => {
+        this.detail = res.data
+        this.laoding = false
+      }).catch(err => {
+        console.log('err' + err)
+      })
+    }
+  }
 }
 </script>
 
@@ -27,6 +65,10 @@ export default {
     height: 24px;
     font-size: 12px;
     margin-top: 15px;
+    span {
+      display: inline-block;
+      margin-right: 10px;
+    }
   }
 }
 .help-detail-container {

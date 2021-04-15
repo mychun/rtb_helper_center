@@ -280,6 +280,7 @@ ul.tabs>.tab-link>a:hover>p {
 	background: #f7f7f7;
 	padding: 10px 10px 10px 20px;
 }
+.help-index-menu-list:empty{ display: none;}
 
 .help-index-menu-list::-webkit-scrollbar {
 	width: 4px;
