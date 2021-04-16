@@ -1,12 +1,7 @@
 <template>
   <div class="footer">
     <div class="help-index clearfix">
-      <dl class="wrap-cont">
-        <dt>快速链接</dt>
-        <dd>
-          <p><a class="link" href="">速递管家</a></p>
-        </dd>
-      </dl>
+      <footer-nav></footer-nav>
       <dl class="wrap-cont">
         <dt>联系方式</dt>
         <dd>
@@ -29,10 +24,14 @@
 </template>
 
 <script>
+import FooterNav from './footer-nav'
 const ewmImgUrl = require('../../../../assets/img/ewm.jpg')
 
 export default {
   name: '',
+  components: {
+    FooterNav
+  },
   data() {
     return {
       ewmImgUrl

@@ -6,7 +6,7 @@ img {border:none;}
 ul li {list-style-type:none;}
 ol li {list-style-type:decimal;}
 ul,form {margin:0px;padding:0px;}
-a{ transition: color .2s;}
+a{ transition: color .2s; color: #000;}
 a:hover{ color:$color-theme}
 a:link,a:visited,a:active {text-decoration:none;}
 
@@ -89,11 +89,10 @@ dl,dt,h3,p{ margin: 0;}
 	outline: none;
 	font-size: 14px;
 	line-height: 24px;
-	padding-right: 300px;
+	// padding-right: 300px;
 }
 
 .help-top-search-box>.help-top-search>.help-top-search-result {
-	display: none;
 	position: absolute;
 	top: 43px;
 	z-index: 30;

@@ -16,7 +16,7 @@ const routes = [
     },
     children: [
       {
-        path: 'list/:productCode/:categoryId?',
+        path: 'list/:productCode/:categoryId?/:searchKey?',
         name: 'list',
         component: () => import('../views/list')
       },

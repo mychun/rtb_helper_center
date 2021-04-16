@@ -1,10 +1,16 @@
 <template>
-    <div class="empty">暂时没有数据!!!</div>
+    <div class="empty" v-text="emptyTxt"></div>
 </template>
 
 <script>
 export default {
-  name: 'empty'
+  name: 'empty',
+  props: {
+    emptyTxt: {
+      type: String,
+      default: '暂时没有数据!!!'
+    }
+  }
 }
 </script>
 

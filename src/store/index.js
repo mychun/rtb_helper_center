@@ -8,12 +8,14 @@ export default new Vuex.Store({
   state: {
     navList: [],
     navChildList: [],
-    productCode: getProductCode()
+    productCode: getProductCode(),
+    searchKey: ''
   },
   getters: {
     navList: (state) => state.navList,
     productCode: (state) => state.productCode,
-    navChildList: (state) => state.navChildList
+    navChildList: (state) => state.navChildList,
+    searchKey: (state) => state.searchKey
   },
   mutations: {
     SET_NAV_LIST(state, flag) {
@@ -27,6 +29,9 @@ export default new Vuex.Store({
     },
     SET_NAV_CHILD_LIST(state, flag) {
       state.navChildList = flag
+    },
+    SET_SEARCH_KEY(state, flag) {
+      state.searchKey = flag
     }
   },
   actions: {
@@ -43,6 +48,9 @@ export default new Vuex.Store({
     },
     setNavChildList({ commit }, navChildList) {
       commit('SET_NAV_CHILD_LIST', navChildList)
+    },
+    setSearchKey({ commit }, searchKey) {
+      commit('SET_SEARCH_KEY', searchKey)
     }
   }
 })

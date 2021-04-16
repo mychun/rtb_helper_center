@@ -71,9 +71,7 @@ export default {
     $route: {
       handler(route) {
         if (route.name === 'list') {
-          if (this.productCode !== route.params.productCode) {
-            store.dispatch('setProductCode', route.params.productCode)
-          }
+          console.log('list.vue handle route watch')
           this.init()
         }
       }
@@ -84,10 +82,17 @@ export default {
   },
   methods: {
     init() {
+      const paramSearchKey = this.$route.params.searchKey
+      if (paramSearchKey) {
+        this.searchForm.documentTitle = paramSearchKey
+      } else {
+        this.searchForm.documentTitle = ''
+      }
+
       const productCode = this.$route.params.productCode
       const categoryId = this.$route.params.categoryId
 
-      if (!this.productCode) {
+      if (!this.productCode || this.productCode !== productCode) {
         store.dispatch('setProductCode', productCode)
       }
       this.searchForm.productCode = this.productCode
@@ -97,6 +102,7 @@ export default {
       } else {
         this.searchForm.categoryId = ''
       }
+
       this.getListData()
     },
     getListData() {
