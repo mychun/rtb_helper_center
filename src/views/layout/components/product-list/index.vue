@@ -6,8 +6,8 @@
       :key="item.productCode"
     >
       <router-link
-        :to="{ name: 'list', params: { productCode: item.productCode } }"
-        ><i class="tab-icon"></i>
+        :to="{ name: 'list', params: { productCode: item.productCode } }" :class="{ active: item.productCode == productCode }"
+        ><i class="iconfont icon-chanpin"></i>
         <p>{{ item.productName }}</p></router-link
       >
     </li>
@@ -30,7 +30,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['navList'])
+    ...mapGetters(['navList', 'productCode'])
   },
   watch: {
     navList(newVal, oldVal) {

@@ -4,7 +4,7 @@
       <div class="help-body-box-detail-title">
         <h1>{{ detail.documentTitle }}</h1>
         <p class="helper-update">
-          <span>创建时间：{{ detail.createTime }}</span
+          <span>创建时间：{{ detail.createTime | formatDate }}</span
           ><span>创建人：{{ detail.createUserName }}</span>
         </p>
       </div>

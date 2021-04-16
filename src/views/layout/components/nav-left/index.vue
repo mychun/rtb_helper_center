@@ -2,26 +2,55 @@
   <div class="help-index-menu">
     <ul class="help-index-menu-list">
       <li v-for="nav in navChildList" :key="nav.categoryId">
-        <template v-if="nav.children.length > 0">
-          <a class="one-class more" href="javascript:void(0);">{{
-            nav.categoryName
-          }}</a>
+        <router-link
+          class="one-class"
+          :to="{
+            name: 'list',
+            params: { productCode, categoryId: nav.categoryId },
+          }"
+          :class="{ more: nav.children.length > 0 }"
+          >{{ nav.categoryName
+          }}<i class="iconfont icon-xia" v-show="nav.children.length > 0"></i
+        ></router-link>
 
+        <template v-if="nav.children.length > 0">
           <ul class="menu-son-list">
             <li v-for="child1 in nav.children" :key="child1.categoryId">
+              <router-link
+                :to="{
+                  name: 'list',
+                  params: { productCode, categoryId: child1.categoryId },
+                }"
+                :class="{ more: child1.children.length > 0 }"
+                >{{ child1.categoryName
+                }}<i
+                  class="iconfont icon-xia"
+                  v-show="child1.children.length > 0"
+                ></i
+              ></router-link>
+
               <template v-if="child1.children.length > 0">
-                <a class="more" href="javascript:void(0);">{{
-                  child1.categoryName
-                }}</a>
                 <ul class="menu-son-list">
                   <li
                     v-for="child2 in child1.children"
                     :key="child2.categoryId"
                   >
+                    <router-link
+                      :to="{
+                        name: 'list',
+                        params: {
+                          productCode,
+                          categoryId: child2.categoryId,
+                        },
+                      }"
+                      :class="{ more: child2.children.length > 0 }"
+                      >{{ child2.categoryName
+                      }}<i
+                        class="iconfont icon-xia"
+                        v-show="child2.children.length > 0"
+                      ></i></router-link>
+
                     <template v-if="child2.children.length > 0">
-                      <a class="more" href="javascript:void(0);">{{
-                        child2.categoryName
-                      }}</a>
                       <ul class="menu-son-list">
                         <li
                           v-for="child3 in child2.children"
@@ -40,42 +69,11 @@
                         </li>
                       </ul>
                     </template>
-                    <template v-else>
-                      <router-link
-                        :to="{
-                          name: 'list',
-                          params: {
-                            productCode,
-                            categoryId: child2.categoryId,
-                          },
-                        }"
-                        >{{ child2.categoryName }}</router-link
-                      >
-                    </template>
                   </li>
                 </ul>
               </template>
-              <template v-else>
-                <router-link
-                  :to="{
-                    name: 'list',
-                    params: { productCode, categoryId: child1.categoryId },
-                  }"
-                  >{{ child1.categoryName }}</router-link
-                >
-              </template>
             </li>
           </ul>
-        </template>
-        <template v-else>
-          <router-link
-            class="one-class"
-            :to="{
-              name: 'list',
-              params: { productCode, categoryId: nav.categoryId },
-            }"
-            >{{ nav.categoryName }}</router-link
-          >
         </template>
       </li>
 
@@ -115,6 +113,15 @@ export default {
   },
   mounted() {
     $('.help-index-menu-list').on('click', '.more', function () {
+      // const childDom = $(this).siblings('ul')
+      // if (childDom.css('display') === 'none') {
+      //   $(this).addClass('show-son-nav')
+      //   childDom.slideDown()
+      // } else {
+      //   $(this).removeClass('show-son-nav')
+      //   childDom.slideUp()
+      // }
+      // console.log(1)
       $(this).toggleClass('show-son-nav').siblings('ul').slideToggle()
     })
   },

@@ -4,7 +4,7 @@
         <router-link class="help-item-title" :to="{ name: 'detail', params: { documentId: item.documentId } }">{{ item.documentTitle }}</router-link>
         <!-- <div class="help-item-content">{{ item.intro }}</div> -->
         <div class="nodes-info">
-          <span>创建时间：{{ item.createTime }}</span>
+          <span>创建时间：{{ item.createTime | formatDate }}</span>
           <span v-if="item.updateUserName">创建人：{{ item.updateUserName }}</span>
         </div>
       </li>

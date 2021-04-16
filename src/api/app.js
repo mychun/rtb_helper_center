@@ -22,3 +22,10 @@ export function getDetail(documentId) {
     .then(res => Promise.resolve(res.data))
     .catch(err => Promise.reject(err))
 }
+
+// 获取角色列表
+export function getTagList(productCode) {
+  return service.get(`/api/ProductTag/?ProductCode=${productCode}`)
+    .then(res => Promise.resolve(res.data))
+    .catch(err => Promise.reject(err))
+}

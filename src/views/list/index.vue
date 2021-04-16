@@ -1,6 +1,18 @@
 <template>
   <div class="help-index-list">
     <div class="help-index-cell">
+      <div class="select-type-container">
+        <select-type
+          typeLabel="角色"
+          :typeList="tagList"
+          typeId="tagId"
+          typeName="tagName"
+          :selectedList="selectedTags"
+          v-if="tagList.length > 0"
+          @selected="selectedRoleEvent"
+        ></select-type>
+      </div>
+
       <div class="help-index-cell-content" v-if="!loading">
         <template v-if="list.length > 0">
           <item-list :data="list"></item-list>
@@ -26,17 +38,19 @@ import ItemList from '../../components/item-list'
 import Pagination from '../../components/pagination'
 import Loader from '../../components/loader'
 import Empty from '../../components/empty'
+import SelectType from '../../components/select-type'
 // import { toScrollTop } from '../../utils/dom'
 import store from '../../store'
 import { mapGetters } from 'vuex'
-import { getList } from '../../api/app'
+import { getList, getTagList } from '../../api/app'
 export default {
   name: 'list',
   components: {
     ItemList,
     Pagination,
     Loader,
-    Empty
+    Empty,
+    SelectType
   },
   data() {
     return {
@@ -45,11 +59,14 @@ export default {
         currentPage: 1, // 当前页码
         productCode: '',
         categoryId: '',
-        documentTitle: ''
+        documentTitle: '',
+        tagIds: ''
       },
       count: 0, // 总记录数
       list: [],
-      loading: true
+      loading: true,
+      tagList: '',
+      selectedTags: []
     }
   },
   // beforeRouteUpdate(to, from, next) {
@@ -68,10 +85,11 @@ export default {
     // productCode(newVal) {
     //   this.init()
     // },
+
+    // 监听当下这个路由 是否 有变化
     $route: {
       handler(route) {
         if (route.name === 'list') {
-          console.log('list.vue handle route watch')
           this.init()
         }
       }
@@ -82,6 +100,14 @@ export default {
   },
   methods: {
     init() {
+      this.initSearchForm()
+
+      this.getTagListData()
+      this.getListData()
+    },
+    initSearchForm() {
+      this.searchForm.currentPage = 1
+
       const paramSearchKey = this.$route.params.searchKey
       if (paramSearchKey) {
         this.searchForm.documentTitle = paramSearchKey
@@ -90,20 +116,30 @@ export default {
       }
 
       const productCode = this.$route.params.productCode
-      const categoryId = this.$route.params.categoryId
 
       if (!this.productCode || this.productCode !== productCode) {
         store.dispatch('setProductCode', productCode)
       }
       this.searchForm.productCode = this.productCode
 
+      const categoryId = this.$route.params.categoryId
       if (categoryId) {
         this.searchForm.categoryId = categoryId
       } else {
         this.searchForm.categoryId = ''
       }
+      // store.dispatch('setCategoryId', categoryId)
 
-      this.getListData()
+      const tagIds = this.$route.params.tagIds
+      if (tagIds) {
+        this.searchForm.tagIds = tagIds
+        this.selectedTags = tagIds.split(',')
+      } else {
+        this.searchForm.tagIds = ''
+        this.selectedTags = []
+      }
+      console.log(this.selectedTags)
+      // store.dispatch('setCategoryId', categoryId)
     },
     getListData() {
       this.loading = true
@@ -120,10 +156,28 @@ export default {
     pageChange(page) {
       this.searchForm.currentPage = page
       this.getListData()
+    },
+    getTagListData() {
+      getTagList(this.productCode).then(res => {
+        this.tagList = res.data.data
+      }).catch(err => {
+        console.log('err', err)
+      })
+    },
+    selectedRoleEvent(tagids) {
+      this.selectedTags = tagids
+      this.searchForm.tagIds = tagids.join(',')
+      // this.$router.push({ name: 'list', params: { productCode: this.productCode, categoryId: this.categoryId, tagIds: this.searchForm.tagIds } })
+      this.getListData()
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.select-type-container {
+  margin-bottom: 40px;
+  padding: 5px;
+  border: 1px solid #efefef;
+}
 </style>
