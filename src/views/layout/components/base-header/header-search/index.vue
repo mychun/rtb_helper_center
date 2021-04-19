@@ -37,7 +37,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { getList } from '../../../../../api/app'
-import { debounce, isCurrentPage } from '../../../../../utils/util'
+import { debounce } from '../../../../../utils/util'
 // import store from '../../../../../store'
 // import Empty from '../../../../../components/empty'
 import Loader from '../../../../../components/loader'
@@ -93,22 +93,19 @@ export default {
     jumpDetail(documentId) {
       // store.dispatch('setSearchKey', '')
       this.recommendList = []
-      const path = `/${this.$route.name}/${this.$route.params.documentId}`
-      if (isCurrentPage(path)) {
-        return
-      }
       this.$router.push({ name: 'detail', params: { documentId } })
     },
     handleSearch() {
       // debugger
       this.recommendList = []
-      const path = `/${this.$route.name}/${this.productCode}/${this.query}`
-      if (isCurrentPage(path)) {
-        return
-      }
-      this.$router.push({ name: 'list', params: { productCode: this.productCode, searchKey: this.query } })
 
-      // store.dispatch('setSearchKey', '')
+      let query = {}
+      if (this.query) {
+        query = {
+          searchKey: this.query
+        }
+      }
+      this.$router.push({ name: 'list', params: { productCode: this.productCode }, query })
     }
   }
 }

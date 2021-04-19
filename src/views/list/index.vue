@@ -108,7 +108,7 @@ export default {
     initSearchForm() {
       this.searchForm.currentPage = 1
 
-      const paramSearchKey = this.$route.params.searchKey
+      const paramSearchKey = this.$route.query.searchKey
       if (paramSearchKey) {
         this.searchForm.documentTitle = paramSearchKey
       } else {
@@ -130,7 +130,7 @@ export default {
       }
       // store.dispatch('setCategoryId', categoryId)
 
-      const tagIds = this.$route.params.tagIds
+      const tagIds = this.$route.query.tagIds
       if (tagIds) {
         this.searchForm.tagIds = tagIds
         this.selectedTags = tagIds.split(',')
@@ -138,7 +138,6 @@ export default {
         this.searchForm.tagIds = ''
         this.selectedTags = []
       }
-      console.log(this.selectedTags)
       // store.dispatch('setCategoryId', categoryId)
     },
     getListData() {
@@ -165,10 +164,17 @@ export default {
       })
     },
     selectedRoleEvent(tagids) {
+      // console.log(tagids)
       this.selectedTags = tagids
       this.searchForm.tagIds = tagids.join(',')
-      // this.$router.push({ name: 'list', params: { productCode: this.productCode, categoryId: this.categoryId, tagIds: this.searchForm.tagIds } })
-      this.getListData()
+      let query = {}
+      if (this.searchForm.tagIds) {
+        query = {
+          tagIds: this.searchForm.tagIds
+        }
+      }
+      this.$router.push({ name: 'list', params: { productCode: this.productCode, categoryId: this.searchForm.categoryId }, query })
+      // this.getListData()
     }
   }
 }

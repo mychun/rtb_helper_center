@@ -9,14 +9,14 @@ const routes = [
     path: '/',
     component: Layout,
     redirect: {
-      path: 'list/:id',
+      path: 'list/:productCode',
       params: {
-        id: '01'
+        productCode: '01'
       }
     },
     children: [
       {
-        path: 'list/:productCode/:categoryId?/:searchKey?',
+        path: 'list/:productCode/:categoryId?',
         name: 'list',
         component: () => import('../views/list')
       },

@@ -36,8 +36,7 @@ export default {
       require: true
     },
     selectedList: {
-      type: Array,
-      require: true
+      type: Array
     }
   },
   data() {
@@ -54,7 +53,7 @@ export default {
       this.$emit('selected', newVal)
     },
     selectedList(newVal) {
-      if (newVal.join(',') === this.selectedTypeList.join(',')) return
+      // if (newVal.join(',') === this.selectedTypeList.join(',')) return
       this.selectedTypeList = newVal
     }
   }

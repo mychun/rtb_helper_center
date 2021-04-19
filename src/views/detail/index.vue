@@ -34,10 +34,16 @@ export default {
       laoding: true
     }
   },
-  created() {
-    this.init()
+  watch: {
+    $route: {
+      handler(route) {
+        if (route.name === 'detail') {
+          this.init()
+        }
+      }
+    }
   },
-  activated() {
+  created() {
     this.init()
   },
   methods: {
